@@ -1,0 +1,15 @@
+
+
+  {[stuff][char index]}
+
+  e (encode)
+  d (decode)
+  nc (numerical cipher)
+  cc (character cipher)
+  rm (rotate mix) ABCDEFGH clump: 1 | group: 3 || ABC DEF GH --->  CAB FDE HG
+  fm (flip mix)
+  r (rotate)
+  f (flip)
+
+  {[e|rm/2/3/1|]}
+
