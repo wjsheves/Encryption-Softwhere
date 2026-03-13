@@ -68,7 +68,7 @@ class Questions {
             Util.print("User chose 'Make " + Util.getType() + "ion Key'");
             Util.print("Input " + Util.getType() + "ion Key:");
             String uio = scanner.nextLine();
-            Util.makeKey(uio);
+            Scrambler.makeKey(uio);
             askQuestionThree();
         } else if (eord.equals("2")) {
             Util.print("User chose 'Choose " + Util.getType() + "ion Key'");
@@ -90,7 +90,7 @@ class Questions {
     static void askPreset() {
 
         if (Data.devModeEnabled.booleanValue()) {
-            
+
             String selectedSequence;
 
             Scanner scanner = new Scanner(System.in);
@@ -140,3 +140,4 @@ class Questions {
 
     }
 }
+

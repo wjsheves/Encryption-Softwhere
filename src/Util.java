@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Util {
@@ -11,27 +12,6 @@ public class Util {
         String clean = rbBlocking;
 
         return clean;
-    }
-
-    public static String makeKey(String iKey) {
-        String type = "";
-        String rtype = "";
-
-        String slightlyCleanKey = Util.cleaner(iKey);
-        if (slightlyCleanKey.contains("e|")) {
-            type = "encrypt";
-            rtype = "e|";
-
-        } else if (slightlyCleanKey.contains("d|")) {
-            type = "decrypt";
-            rtype = "d|";
-        }
-        String slightlyCleanerKey = slightlyCleanKey.replace(rtype, "");
-        print(type);
-        print(slightlyCleanerKey);
-
-        return "";
-
     }
 
     static String print(String input) {
