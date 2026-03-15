@@ -23,6 +23,7 @@ public class Scrambler {
         String[] eSteps = inners.split("/");
         String[] eDData = {type,eDTypeC, Arrays.toString(eSteps)};
         Util.print(Arrays.toString(eDData));
+
         return eDData;
 
     }

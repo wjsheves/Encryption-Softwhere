@@ -12,13 +12,21 @@ public class MUI extends JFrame {
     private JComboBox encryptionSelect;
     private JTextField Input;
     private JButton encryptButton;
-    private JTextField textField2;
+    private JTextField inputKey;
     private JTextField textField3;
-    private JButton addButton;
+    private JButton saveKey;
     private JButton button3;
     private JLabel EncryptionOutput;
     private JButton devModeEnable;
     private JTextField devKey;
+    private JButton openDevMenue;
+
+    public JComboBox<String> getEncryptionSelect() {
+        return encryptionSelect;
+    }
+
+    DefaultComboBoxModel<String> model =
+            (DefaultComboBoxModel<String>) encryptionSelect.getModel();
 
     public MUI() {
         setContentPane(MainPanle );
@@ -33,11 +41,9 @@ public class MUI extends JFrame {
             throw new RuntimeException(e);
         }
 
-        encryptionSelect.addItem(Data.sq1);
-        encryptionSelect.addItem(Data.sq2);
-        encryptionSelect.addItem(Data.sq3);
-        encryptionSelect.addItem(Data.sq4);
-
+        for (String key : DBHelper.loadKeys()) {
+            encryptionSelect.addItem(key);
+        }
 
         encryptButton.addActionListener(new ActionListener() {
             @Override
@@ -50,15 +56,46 @@ public class MUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(devKey.getText().equals(Data.hashToCheck)){
                     Util.print("Dev Mode Active!");
+                    Data.devModeEnabled = true;
                 } else {
                     Util.print("failed!");
                     Util.print(devKey.getText());
+                    Data.devModeEnabled = false;
+                }
+            }
+        });
+        saveKey.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newKey = inputKey.getText().trim();
+
+                if (!newKey.isEmpty()) {
+
+                    DBHelper.addKey(newKey);
+                    encryptionSelect.addItem(newKey);
+
+                    inputKey.setText("");
+                }
+            }
+        });
+
+        openDevMenue.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(Data.devModeEnabled.booleanValue()) {
+                    DevConsole devConsole = new DevConsole();
                 }
             }
         });
     }
 
+
+
     public static void main(String[] args) {
         new MUI();
+        DBHelper.init();
+        if (DBHelper.isDatabaseEmpty()) {
+            DBHelper.seedFromData();
+        }
     }
 }
