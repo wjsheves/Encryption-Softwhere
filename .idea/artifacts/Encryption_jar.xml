@@ -1,8 +1,9 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="Encryption:jar">
+  <artifact type="jar" name="Encryption:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Encryption_jar</output-path>
     <root id="archive" name="Encryption.jar">
       <element id="module-output" name="Encryption" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../sqlite-jdbc-3.51.2.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

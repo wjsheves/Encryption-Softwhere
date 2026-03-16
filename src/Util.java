@@ -4,6 +4,17 @@ import java.util.concurrent.CompletionService;
 public class Util {
 
 
+    public static void ensureFolderExists() {
+
+        String folderPath =
+                System.getProperty("user.home") + "/EncryptionApp";
+
+        java.io.File folder = new java.io.File(folderPath);
+
+        if (!folder.exists()) {
+            folder.mkdirs();   // create folder (and parents)
+        }
+    }
 
     public static String cleaner(String I_Unclean) {
 

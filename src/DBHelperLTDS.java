@@ -1,10 +1,27 @@
+import java.io.File;
 import java.sql.*;
 
 public class DBHelperLTDS {
 
-    private static final String URL = "jdbc:sqlite:ltds.db";
+
+    private static final String DB_FOLDER =
+            System.getProperty("user.home") + "/EncryptionApp";
+
+    private static final String URL =
+            "jdbc:sqlite:" + DB_FOLDER + "/ltds.db";
+
+    private static void ensureFolderExists() {
+
+        File folder = new File(DB_FOLDER);
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
 
     public static void init() {
+
+        ensureFolderExists();
 
         String sql = """
             CREATE TABLE IF NOT EXISTS ltds (
@@ -21,7 +38,6 @@ public class DBHelperLTDS {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        intVars();
     }
 
     public static void setVar(String name, String value) {

@@ -49,6 +49,7 @@ public class DevConsole extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showConfirmDialog(DevConsole,"Are You Sure?");
                 DBHelperLTDS.dumpLTDS();
+                DBHelperLTDS.intVars();
                 Default.setVisible(false);
                 CloseMSG.setVisible(true);
 

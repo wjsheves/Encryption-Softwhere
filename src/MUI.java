@@ -21,7 +21,7 @@ public class MUI extends JFrame {
     private JTextField devKey;
     private JButton openDevMenu;
     private JTextArea welcomeMSG;//TODO add color shift as well as dynamic text editing and fix background
-
+    int i = 1;
 
     public JComboBox<String> EncryptionSelect() {
         return encryptionSelect;
@@ -41,11 +41,9 @@ public class MUI extends JFrame {
 
     public void initSequence(MUI mui) {
         JOptionPane.showMessageDialog(mui, "Initiating Sequences");
-        DBHelperKeys.clearKeys();
         encryptionSelect.removeAllItems();
-        DBHelperKeys.seedFromData();
         reloadKeys();
-        Util.print("Initiating Sequences");
+        Util.print("Initiating Sequences!");
     }
 
     public MUI() {
@@ -79,6 +77,7 @@ public class MUI extends JFrame {
                     Util.print("failed!");
                     Util.print(devKey.getText());
                     DBHelperLTDS.setVar("DevMode","false");
+                    JOptionPane.showMessageDialog(MUI.this,"Wrong Password");
                 }
             }
         });
@@ -89,10 +88,12 @@ public class MUI extends JFrame {
 
                 if (!newKey.isEmpty()) {
 
-                    DBHelperKeys.addKey(newKey);
+                    DBHelperKeys.addUserKey("User_"+i,newKey);
                     encryptionSelect.addItem(newKey);
-
+                    Data.addKey(newKey);
                     inputKey.setText("");
+                    i++;
+                    Util.print("Number: "+i);
                 }
             }
         });
@@ -133,6 +134,7 @@ public class MUI extends JFrame {
     public static void main(String[] args) {
         new MUI();
         DBHelperKeys.init();
+        DBHelperLTDS.init();
         if (DBHelperKeys.isDatabaseEmpty()) {
             DBHelperKeys.seedFromData();
         }
