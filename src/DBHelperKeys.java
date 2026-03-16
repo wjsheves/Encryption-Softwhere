@@ -2,14 +2,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBHelper {
+public class DBHelperKeys {
 
-    private static final String URL = "jdbc:sqlite:keys.db";
+    private static final String URL = "jdbc:sqlite:presetKeys.db";
 
     public static void init() {
 
         String sql = """
-                CREATE TABLE IF NOT EXISTS keys (
+                CREATE TABLE IF NOT EXISTS presetKeys (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     value TEXT NOT NULL
                 );
@@ -23,11 +23,13 @@ public class DBHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public static void addKey(String key) {
 
-        String sql = "INSERT INTO keys(value) VALUES(?)";
+        String sql = "INSERT INTO presetKeys(value) VALUES(?)";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -42,28 +44,28 @@ public class DBHelper {
 
     public static List<String> loadKeys() {
 
-        List<String> keys = new ArrayList<>();
+        List<String> presetKeys = new ArrayList<>();
 
-        String sql = "SELECT value FROM keys";
+        String sql = "SELECT value FROM presetKeys";
 
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                keys.add(rs.getString("value"));
+                presetKeys.add(rs.getString("value"));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return keys;
+        return presetKeys;
     }
 
     public static boolean isDatabaseEmpty() {
 
-        String sql = "SELECT COUNT(*) FROM keys";
+        String sql = "SELECT COUNT(*) FROM presetKeys";
 
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement();
@@ -83,8 +85,8 @@ public class DBHelper {
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement()) {
 
-            stmt.executeUpdate("DELETE FROM keys");
-            stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='keys'");
+            stmt.executeUpdate("DELETE FROM presetKeys");
+            stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='presetKeys'");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,8 +95,9 @@ public class DBHelper {
 
     public static void seedFromData() {
 
-        for (String key : Data.keys) {
+        for (String key : Data.presetKeys) {
             addKey(key);
+            Util.print(key);
         }
     }
 }

@@ -15,24 +15,44 @@ public class MUI extends JFrame {
     private JTextField inputKey;
     private JTextField textField3;
     private JButton saveKey;
-    private JButton button3;
+    private JButton saveButton;
     private JLabel EncryptionOutput;
     private JButton devModeEnable;
     private JTextField devKey;
-    private JButton openDevMenue;
+    private JButton openDevMenu;
+    private JTextArea welcomeMSG;//TODO add color shift as well as dynamic text editing and fix background
 
-    public JComboBox<String> getEncryptionSelect() {
+
+    public JComboBox<String> EncryptionSelect() {
         return encryptionSelect;
     }
 
-    DefaultComboBoxModel<String> model =
-            (DefaultComboBoxModel<String>) encryptionSelect.getModel();
+    public void reloadKeys() {
+
+        DefaultComboBoxModel<String> model =
+                new DefaultComboBoxModel<>();
+
+        for (String key : DBHelperKeys.loadKeys()) {
+            model.addElement(key);
+        }
+
+        encryptionSelect.setModel(model);
+    }
+
+    public void initSequence(MUI mui) {
+        JOptionPane.showMessageDialog(mui, "Initiating Sequences");
+        DBHelperKeys.clearKeys();
+        encryptionSelect.removeAllItems();
+        DBHelperKeys.seedFromData();
+        reloadKeys();
+        Util.print("Initiating Sequences");
+    }
 
     public MUI() {
         setContentPane(MainPanle );
         setTitle("Encryption Software");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600,600);
+        setSize(600,400);
         setLocationRelativeTo(null);
         setVisible(true);
         try {
@@ -41,9 +61,7 @@ public class MUI extends JFrame {
             throw new RuntimeException(e);
         }
 
-        for (String key : DBHelper.loadKeys()) {
-            encryptionSelect.addItem(key);
-        }
+        initSequence(this);
 
         encryptButton.addActionListener(new ActionListener() {
             @Override
@@ -56,11 +74,11 @@ public class MUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(devKey.getText().equals(Data.hashToCheck)){
                     Util.print("Dev Mode Active!");
-                    Data.devModeEnabled = true;
+                    DBHelperLTDS.setVar("DevMode","true");
                 } else {
                     Util.print("failed!");
                     Util.print(devKey.getText());
-                    Data.devModeEnabled = false;
+                    DBHelperLTDS.setVar("DevMode","false");
                 }
             }
         });
@@ -71,7 +89,7 @@ public class MUI extends JFrame {
 
                 if (!newKey.isEmpty()) {
 
-                    DBHelper.addKey(newKey);
+                    DBHelperKeys.addKey(newKey);
                     encryptionSelect.addItem(newKey);
 
                     inputKey.setText("");
@@ -79,11 +97,31 @@ public class MUI extends JFrame {
             }
         });
 
-        openDevMenue.addActionListener(new ActionListener() {
+        openDevMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(Data.devModeEnabled.booleanValue()) {
-                    DevConsole devConsole = new DevConsole();
+                if(Boolean.parseBoolean(DBHelperLTDS.getVar("DevMode"))) {
+                        new DevConsole(MUI.this);
+
+                } else {
+                    JOptionPane.showMessageDialog(MUI.this,"Not Authorized");
+                }
+            }
+        });
+
+        final int[] current = {0};
+
+        encryptionSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                current[0]++;
+                Object item = encryptionSelect.getSelectedItem();
+                if (item != null) {
+                    Util.print("Selected ComboBox Key:" + encryptionSelect.getSelectedItem().toString());
+                    Util.print("Number of Times Selected:");
+                    Util.printInt(current[0]);
+                    Data.currentKey = encryptionSelect.getSelectedItem().toString();
+                    Util.print("Selected Data Key: " + Data.currentKey);
                 }
             }
         });
@@ -91,11 +129,14 @@ public class MUI extends JFrame {
 
 
 
+
     public static void main(String[] args) {
         new MUI();
-        DBHelper.init();
-        if (DBHelper.isDatabaseEmpty()) {
-            DBHelper.seedFromData();
+        DBHelperKeys.init();
+        if (DBHelperKeys.isDatabaseEmpty()) {
+            DBHelperKeys.seedFromData();
         }
+
+
     }
 }

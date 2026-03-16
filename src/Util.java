@@ -1,9 +1,12 @@
-import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.CompletionService;
 
 public class Util {
 
+
+
     public static String cleaner(String I_Unclean) {
+
 
         String rfBlocking = I_Unclean.replace("{[","");
         String rbBlocking = rfBlocking.replace("]}","");
@@ -15,6 +18,13 @@ public class Util {
     }
 
     static String print(String input) {
+
+        System.out.println(input);
+
+
+        return input;
+    }
+    static int printInt(int input) {
 
         System.out.println(input);
 

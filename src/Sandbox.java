@@ -1,8 +1,8 @@
-import java.util.Scanner;
-class Encryption {
+public class Sandbox {
 
     public static void main(String[] args) {
-        new MUI();
         DBHelperLTDS.init();
+        DBHelperLTDS.setVar("DevMode","false");
+
     }
 }
